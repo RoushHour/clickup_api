@@ -1,25 +1,27 @@
- module.exports = function (params, required) {
-		var requiredCount = 0;
-
+module.exports = function (params, required) {
+		let missingRequiredParams = 0;
 		required.forEach(function(elem){
 			if (params[elem] === undefined) {
 				console.log(`Error: ${elem} required, see ClickUp documentation`);
-				requiredCount++;
+				missingRequiredParams++;
 			}
 		});
 
-		if (requiredCount !== 0){
+		if (missingRequiredParams !== 0){
 			return;
 		}
 
-		var paramsName = Object.keys(params);
-		var str = "";
-
-		for(let i in paramsName){
-			str += paramsName[i]+"="+params[paramsName[i]]+"&";
+		let queryString = '';
+		let paramsName = Object.keys(params);
+    if (paramsName.length === required.length){
+      return queryString;
+    }
+    
+		for (let paramName in paramsName){
+			queryString += `${paramsName[paramName]}=${params[paramsName[paramName]]}&`;
 		}
-		str = str.slice(0,-1);
-		str = encodeURI(str);
+		queryString = queryString.slice(0,-1);
+		queryString = encodeURI(queryString);
 
-		return str;
+		return queryString;
 }
